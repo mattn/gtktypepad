@@ -1,0 +1,35 @@
+CFLAGS=
+
+all : gtktypepad.exe
+
+gtktypepad.exe : gtktypepad.o gtktypepad.res
+	gcc -o gtktypepad.exe \
+		-Lc:/gtk/lib \
+		gtktypepad.o \
+		gtktypepad.res \
+		`pkg-config --libs gtk+-2.0 libxml-2.0 gthread-2.0` \
+		-lcurldll \
+		-lintl \
+		-lshell32
+
+gtktypepad.o : gtktypepad.c
+	gcc -c \
+		$(CFLAGS) \
+		`pkg-config --cflags gtk+-2.0 libxml-2.0 gthread-2.0` \
+		gtktypepad.c
+
+gtktypepad.res : gtktypepad.rc
+	windres -O coff gtktypepad.rc gtktypepad.res
+
+clean:
+	-rm *.o *.res *.exe
+
+package:
+	-mkdir win32package\data 2> NUL
+	cp data/logo.ico win32package/data/.
+	cp data/*.gif win32package/data/.
+	cp data/*.png win32package/data/.
+	-mkdir win32package\share\locale\ja\LC_MESSAGES 2> NUL
+	msgfmt -o win32package/share/locale/ja/LC_MESSAGES/gtktypepad.mo po/ja.po
+	cp libcurl.dll win32package
+	cp zlib1.dll win32package
