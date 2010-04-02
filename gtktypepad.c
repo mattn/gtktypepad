@@ -714,10 +714,12 @@ static gpointer update_friends_statuses_thread(gpointer data) {
 	memcpy(recv_data, response_data, response_size);
 	if (status == 304)
 		goto leave;
+	/*
 	if (response_mime && strcmp(response_mime, "application/xml")) {
 		result_str = g_strdup(_("unknown server response"));
 		goto leave;
 	}
+	*/
 	if (status != 200) {
 		/* failed to get xml */
 		if (response_data) {
